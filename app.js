@@ -13,23 +13,22 @@ app.get('/', (req, res)=>{
 })
 
 app.post('/align', (req, res)=>{
-    
-    let seq1 = (req.body.seq1).replaceAll('\n', '')
-    let seq2 = (req.body.seq2).replaceAll('\n', '')
+    let seq1 = req.body.seq1.replace(/\n/g, '')
+    let seq2 = req.body.seq2.replace(/\n/g, '')
     let match = Number(req.body.match)
     let mismatch = Number(req.body.mismatch)
     let gap = Number(req.body.gap)
     
     let [al1, al2, matches, totalGaps, score] = NW.alignment(seq1, seq2, match, mismatch, gap)
     let formatedSequences = NW.formatAlignment(al1, al2)
-    console.log(formatedSequences)
-    res.send(JSON.stringify({
+    
+    res.json({
         alignment:formatedSequences,
         matches:matches,
         totalGaps:totalGaps,
         score:score,
         size:al1.length
-    }))
+    })
 })
 
 app.listen(8080, ()=>{console.log('running')})
